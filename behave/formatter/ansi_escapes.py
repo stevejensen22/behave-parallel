@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Provides ANSI escape sequences for coloring/formatting output in ANSI terminals.
+Provides ANSI escape sequences for coloring/formatting output in ANSI
+terminals.
 """
 
 import os
@@ -37,7 +38,9 @@ escapes = {
 }
 
 if 'GHERKIN_COLORS' in os.environ:
-    new_aliases = [p.split('=') for p in os.environ['GHERKIN_COLORS'].split(':')]
+    new_aliases = [
+        p.split('=') for p in os.environ['GHERKIN_COLORS'].split(':')
+    ]
     aliases.update(dict(new_aliases))
 
 for alias in aliases:
@@ -50,7 +53,10 @@ for alias in aliases:
 def up(n):
     return u"\x1b[%dA" % n
 
+
 _ANSI_ESCAPE_PATTERN = re.compile(u"\x1b\[\d+[mA]", re.UNICODE)
+
+
 def strip_escapes(text):
     """
     Removes ANSI escape sequences from text (if any are contained).
@@ -77,12 +83,12 @@ def use_ansi_escape_colorbold_composites():     # pragma: no cover
         color_codes[color_name] = color_code
 
     for alias in aliases:
-        parts = [ color_codes[c] for c in aliases[alias].split(',') ]
+        parts = [color_codes[c] for c in aliases[alias].split(',')]
         composite_escape = u"\x1b[{0}m".format(u";".join(parts))
         escapes[alias] = composite_escape
 
         arg_alias = alias + '_arg'
         arg_seq = aliases.get(arg_alias, aliases[alias] + ',bold')
-        parts = [ color_codes[c] for c in arg_seq.split(',') ]
+        parts = [color_codes[c] for c in arg_seq.split(',')]
         composite_escape = u"\x1b[{0}m".format(u";".join(parts))
         escapes[arg_alias] = composite_escape

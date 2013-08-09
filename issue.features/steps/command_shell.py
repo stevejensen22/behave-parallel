@@ -20,11 +20,14 @@ import shlex
 import codecs
 
 HERE = os.path.dirname(__file__)
-TOP  = os.path.join(HERE, "..", "..")
+TOP = os.path.join(HERE, "..", "..")
+
 
 # -----------------------------------------------------------------------------
 # CLASSES:
 # -----------------------------------------------------------------------------
+
+
 class CommandResult(object):
     """
     ValueObject to store the results of a subprocess command call.
@@ -40,6 +43,7 @@ class CommandResult(object):
         self.returncode = 0
         self.output = ""
         self.failed = False
+
 
 class Command(object):
     """
@@ -64,7 +68,9 @@ class Command(object):
         output = command_process.communicate()[0]
         command_process.poll()
         assert command_process.returncode is not None
-        print("result={0}, OUTPUT:\n{1}\n".format(command_process.returncode, output))
+        print("result={0}, OUTPUT:\n{1}\n".format(
+            command_process.returncode, output
+        ))
         if command_process.returncode == 0:
             # -- SUCCESSFUL EXECUTION:
             return output
@@ -73,7 +79,6 @@ class Command(object):
         e = subprocess.CalledProcessError(command_process.returncode, cmd)
         e.output = output
         raise e
-
 
     @classmethod
     def run(cls, command, cwd=".", **kwargs):
@@ -98,16 +103,19 @@ class Command(object):
         # -- RUN COMMAND:
         try:
             subprocess_check_output = getattr(subprocess, "check_output",
-                                            cls.subprocess_check_output)
+                                              cls.subprocess_check_output)
             stderr = kwargs.pop("stderr", subprocess.STDOUT)
-            command_result.output = subprocess_check_output(cmdargs,
-                stderr=stderr, cwd=cwd, **kwargs)
+            command_result.output = subprocess_check_output(
+                cmdargs, stderr=stderr, cwd=cwd, **kwargs
+            )
             command_result.returncode = 0
             command_result.failed = False
             if cls.DEBUG:
                 print("shell.cwd={0}".format(kwargs.get("cwd", None)))
                 print("shell.command: {0}".format(" ".join(cmdargs)))
-                print("shell.command.output:\n{0};".format(command_result.output))
+                print("shell.command.output:\n{0};".format(
+                    command_result.output
+                ))
         except subprocess.CalledProcessError, e:
             command_result.output = e.output
             command_result.returncode = e.returncode
@@ -121,8 +129,11 @@ class Command(object):
 # -----------------------------------------------------------------------------
 # FUNCTIONS:
 # -----------------------------------------------------------------------------
+
+
 def run(command, cwd=".", **kwargs):
     return Command.run(command, cwd=cwd, **kwargs)
+
 
 def behave(cmdline, cwd=".", **kwargs):
     """
@@ -132,9 +143,12 @@ def behave(cmdline, cwd=".", **kwargs):
     assert isinstance(cmdline, basestring)
     return run("behave " + cmdline, cwd=cwd, **kwargs)
 
+
 # -----------------------------------------------------------------------------
 # TEST MAIN:
 # -----------------------------------------------------------------------------
+
+
 if __name__ == "__main__":
     command = " ".join(sys.argv[1:])
     output = Command.subprocess_check_output(sys.argv[1:])

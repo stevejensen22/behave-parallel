@@ -5,6 +5,7 @@ from mock import patch
 
 from behave.log_capture import LoggingCapture
 
+
 class TestLogCapture(object):
     def test_get_value_returns_all_log_records(self):
         class FakeConfig(object):

@@ -13,14 +13,17 @@ from behave.formatter.base import Formatter
 from behave.compat.os_path import relpath
 import os
 
+
 # -----------------------------------------------------------------------------
 # CLASS: ProgressFormatterBase
 # -----------------------------------------------------------------------------
+
+
 class ProgressFormatterBase(Formatter):
     """
-    Provides formatter base class for different variants of progress formatters.
-    A progress formatter show an abbreviated, compact dotted progress bar,
-    similar to unittest output (in terse mode).
+    Provides formatter base class for different variants of progress
+    formatters.  A progress formatter show an abbreviated, compact dotted
+    progress bar, similar to unittest output (in terse mode).
     """
     # -- MAP: step.status to short dot_status representation.
     dot_status = {
@@ -36,13 +39,13 @@ class ProgressFormatterBase(Formatter):
         super(ProgressFormatterBase, self).__init__(stream, config)
         self.steps = []
         self.failures = []
-        self.current_feature  = None
+        self.current_feature = None
         self.current_scenario = None
 
     def reset(self):
         self.steps = []
         self.failures = []
-        self.current_feature  = None
+        self.current_feature = None
         self.current_scenario = None
 
     # -- FORMATTER API:
@@ -154,10 +157,10 @@ class StepProgressFormatter(ProgressFormatterBase):
         dot_status = self.dot_status[result.status]
         if result.status == "failed":
             if (result.exception and
-                not isinstance(result.exception, AssertionError)):
+                    not isinstance(result.exception, AssertionError)):
                 # -- ISA-ERROR: Some Exception
                 dot_status = self.dot_status["error"]
-            result.feature  = self.current_feature
+            result.feature = self.current_feature
             result.scenario = self.current_scenario
             self.failures.append(result)
         self.stream.write(dot_status)

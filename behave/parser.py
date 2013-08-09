@@ -26,6 +26,7 @@ def parse_feature(data, language=None, filename=None):
 
     return result
 
+
 def parse_steps(text, language=None, filename=None):
     """
     Parse a number of steps a multi-line text from a scenario.
@@ -345,7 +346,8 @@ class Parser(object):
 
     def parse_steps(self, text, filename=None):
         """
-        Parse support for execute_steps() functionality that supports step with:
+        Parse support for execute_steps() functionality that supports step
+        with:
           * multiline text
           * table
 
@@ -372,4 +374,3 @@ class Parser(object):
             self.action_table("")
         steps = self.statement.steps
         return steps
-

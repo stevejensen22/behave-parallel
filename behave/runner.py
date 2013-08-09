@@ -23,7 +23,7 @@ from behave.log_capture import LoggingCapture
 multiprocessing = None
 try:
     import multiprocessing
-except ImportError,e:
+except ImportError, e:
     pass
 
 
@@ -260,7 +260,9 @@ class Context(object):
         '''
         assert isinstance(steps_text, unicode), "Steps must be unicode."
         if not self.feature:
-            raise ValueError('execute_steps() called outside of feature context')
+            raise ValueError(
+                'execute_steps() called outside of feature context'
+            )
 
         steps = self.feature.parser.parse_steps(steps_text)
         for step in steps:
@@ -353,8 +355,9 @@ class Runner(object):
     def setup_paths(self):
         if self.config.paths:
             if self.config.verbose:
-                print 'Supplied path:', ', '.join('"%s"' % path
-                       for path in self.config.paths)
+                print 'Supplied path:', ', '.join(
+                    '"%s"' % path for path in self.config.paths
+                )
             base_dir = self.config.paths[0]
             if base_dir.startswith('@'):
                 # -- USE: behave @features.txt
@@ -567,10 +570,11 @@ class Runner(object):
             return 1
 
         if not multiprocessing:
-            print ("ERROR: Cannot import multiprocessing module."
-            " If you're on python2.5, go get the backport")
+            print (
+                "ERROR: Cannot import multiprocessing module."
+                " If you're on python2.5, go get the backport"
+            )
             return 1
-
 
         self.load_hooks()
         self.load_step_definitions()
@@ -619,9 +623,13 @@ class Runner(object):
                         scenario_count += 1
 
         proc_count = int(getattr(self.config, 'proc_count'))
-        print ("INFO: {0} scenario(s) and {1} feature(s) queued for consideration by "
-               "{2} workers. Some may be skipped if the -t option was given..."
-               .format(scenario_count, feature_count, proc_count))
+        print (
+            "INFO: {0} scenario(s) and {1} feature(s) queued for consideration"
+            "by {2} workers. Some may be skipped if the -t option was"
+            "given...".format(
+                scenario_count, feature_count, proc_count
+            )
+        )
         time.sleep(2)
 
         procs = []
@@ -652,8 +660,9 @@ class Runner(object):
 
             sys.stderr.write("* ")
 
-            job_report_text = self.generatereport(proc_number,
-            current_job, start_time, end_time, writebuf)
+            job_report_text = self.generatereport(
+                proc_number, current_job, start_time, end_time, writebuf
+            )
 
             if job_report_text:
                 results = {}
@@ -665,8 +674,9 @@ class Runner(object):
                 results['reportinginfo'] = job_report_text
                 results['status'] = current_job.status
                 if current_job.type != 'feature':
-                    results[
-                        'uniquekey'] = current_job.filename + current_job.feature.name
+                    results['uniquekey'] = (
+                        current_job.filename + current_job.feature.name
+                    )
                 else:
                     results['scenarios_passed'] = 0
                     results['scenarios_failed'] = 0
@@ -688,16 +698,20 @@ class Runner(object):
         else:
             self.formatter.uri(current_job.feature.filename)
 
-    def generatereport(self, proc_number, current_job, start_time, end_time, writebuf):
+    def generatereport(self, proc_number, current_job, start_time,
+                       end_time, writebuf):
         if not writebuf.pos:
             return ""
 
-        reportheader = start_time + "|WORKER" + str(proc_number) + " START|" + \
-        "status:" + current_job.status + "|" + current_job.filename + "\n"
+        reportheader = "%s|WORKER%s START|status:%s|%s\n" % (
+            start_time, str(proc_number),
+            current_job.status, current_job.filename
+        )
 
-        reportfooter = end_time + "|WORKER" + str(proc_number) + " END|" + \
-        "status:" + current_job.status + "|" + current_job.filename + \
-        "|Duration:" + str(current_job.duration)
+        reportfooter = "%s|WORKER%s END|status:%s|%s|Duration:%s" % (
+            end_time, str(proc_number), current_job.status,
+            current_job.filename, str(current_job.duration)
+        )
 
         if self.config.format[0] == 'plain' and len(current_job.tags):
             tags = "@"
@@ -737,8 +751,7 @@ class Runner(object):
 
     def multiproc_fullreport(self):
         metrics = collections.defaultdict(int)
-        combined_features_from_scenarios_results = collections.defaultdict(
-            lambda: '')
+        results_combined_features = collections.defaultdict(lambda: '')
 
         while not self.resultsqueue.empty():
             print "\n" * 3
@@ -747,7 +760,7 @@ class Runner(object):
             print jobresult['reportinginfo']
 
             if jobresult['jobtype'] != 'feature':
-                combined_features_from_scenarios_results[
+                results_combined_features[
                     jobresult['uniquekey']] += '|' + jobresult['status']
                 metrics['scenarios_' + jobresult['status']] += 1
             else:
@@ -763,23 +776,28 @@ class Runner(object):
                 metrics['scenarios_failed'] += jobresult['scenarios_failed']
                 metrics['scenarios_skipped'] += jobresult['scenarios_skipped']
 
-        for uniquekey in combined_features_from_scenarios_results:
-            if 'failed' in combined_features_from_scenarios_results[uniquekey]:
+        for uniquekey in results_combined_features:
+            if 'failed' in results_combined_features[uniquekey]:
                 metrics['features_failed'] += 1
-            elif 'passed' in combined_features_from_scenarios_results[uniquekey]:
+            elif 'passed' in results_combined_features[uniquekey]:
                 metrics['features_passed'] += 1
             else:
                 metrics['features_skipped'] += 1
 
         print "\n" * 3
         print "_" * 75
-        print ("{0} features passed, {1} features failed, {2} features skipped\n"
-               "{3} scenarios passed, {4} scenarios failed, {5} scenarios skipped\n"
-               "{6} steps passed, {7} steps failed, {8} steps skipped, {9} steps undefined\n")\
-                .format(
-                metrics['features_passed'], metrics['features_failed'], metrics['features_skipped'],
-                metrics['scenarios_passed'], metrics['scenarios_failed'], metrics['scenarios_skipped'],
-                metrics['steps_passed'], metrics['steps_failed'], metrics['steps_skipped'], metrics['steps_undefined'])
+        print (
+            "{0} features passed, {1} features failed, {2} features"
+            "skipped\n{3} scenarios passed, {4} scenarios failed, {5}"
+            "scenarios skipped\n{6} steps passed, {7} steps failed, {8}"
+            "steps skipped, {9} steps undefined\n"
+        ).format(
+            metrics['features_passed'], metrics['features_failed'],
+            metrics['features_skipped'], metrics['scenarios_passed'],
+            metrics['scenarios_failed'], metrics['scenarios_skipped'],
+            metrics['steps_passed'], metrics['steps_failed'],
+            metrics['steps_skipped'], metrics['steps_undefined']
+        )
 
         return metrics['features_failed']
 

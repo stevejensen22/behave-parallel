@@ -33,7 +33,9 @@ for fixed, keywords in configuration.options:
 
     text = re.sub(r'\s+', ' ', keywords['help']).strip()
     text = text.replace('%%', '%')
-    text = textwrap.fill(text, 70, initial_indent='   ', subsequent_indent='   ')
+    text = textwrap.fill(
+        text, 70, initial_indent='   ', subsequent_indent='   '
+    )
     cmdline.append('**%s**\n%s' % (', '.join(fixed), text))
 
     if skip or dest in 'tags_help lang_list lang_help version'.split():
@@ -42,16 +44,20 @@ for fixed, keywords in configuration.options:
     action = keywords.get('action', 'store')
     if action == 'store':
         type = 'text'
-    elif action in ('store_true','store_false'):
+    elif action in ('store_true', 'store_false'):
         type = 'boolean'
     elif action == 'append':
         type = 'text (multiple allowed)'
     else:
         raise ValueError('unknown action %s' % action)
 
-    text = re.sub(r'\s+', ' ', keywords.get('config_help', keywords['help'])).strip()
+    text = re.sub(
+        r'\s+', ' ', keywords.get('config_help', keywords['help'])
+    ).strip()
     text = text.replace('%%', '%')
-    text = textwrap.fill(text, 70, initial_indent='   ', subsequent_indent='   ')
+    text = textwrap.fill(
+        text, 70, initial_indent='   ', subsequent_indent='   '
+    )
     config.append('**%s** -- %s\n%s' % (dest, type, text))
 
 

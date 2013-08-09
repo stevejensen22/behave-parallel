@@ -16,6 +16,7 @@ from behave import model, parser, runner, step_registry
 from behave.configuration import ConfigError
 from behave.log_capture import LoggingCapture
 
+
 class TestContext(object):
     def setUp(self):
         r = Mock()
@@ -70,12 +71,18 @@ class TestContext(object):
         self.context._pop()
         eq_(self.context.thing, 'stuff')
         eq_(self.context.other_thing, 'more stuff')
-        assert getattr(self.context, 'third_thing', None) is None, '%s is not None' % self.context.third_thing
+        assert getattr(self.context, 'third_thing', None) is None, (
+            '%s is not None' % self.context.third_thing
+        )
 
         self.context._pop()
         eq_(self.context.thing, 'stuff')
-        assert getattr(self.context, 'other_thing', None) is None, '%s is not None' % self.context.other_thing
-        assert getattr(self.context, 'third_thing', None) is None, '%s is not None' % self.context.third_thing
+        assert getattr(self.context, 'other_thing', None) is None, (
+            '%s is not None' % self.context.other_thing
+        )
+        assert getattr(self.context, 'third_thing', None) is None, (
+            '%s is not None' % self.context.third_thing
+        )
 
     def test_masking_existing_user_attribute_when_verbose_causes_warning(self):
         warns = []
@@ -97,13 +104,17 @@ class TestContext(object):
         print repr(warns)
         assert warns, 'warns is empty!'
         warning = warns[0]
-        assert isinstance(warning, runner.ContextMaskWarning), 'warning is not a ContextMaskWarning'
+        assert isinstance(warning, runner.ContextMaskWarning), (
+            'warning is not a ContextMaskWarning'
+        )
         info = warning.args[0]
-        assert info.startswith('user code'), "%r doesn't start with 'user code'" % info
+        assert info.startswith('user code'), (
+            "%r doesn't start with 'user code'" % info
+        )
         assert "'thing'" in info, '%r not in %r' % ("'thing'", info)
         assert 'tutorial' in info, '"tutorial" not in %r' % (info, )
 
-    def test_masking_existing_user_attribute_when_not_verbose_causes_no_warning(self):
+    def test_mask_existing_user_attr_when_not_verbose_causes_no_warning(self):
         warns = []
 
         def catch_warning(*args, **kwargs):
@@ -142,9 +153,13 @@ class TestContext(object):
         print repr(warns)
         assert warns, 'warns is empty!'
         warning = warns[0]
-        assert isinstance(warning, runner.ContextMaskWarning), 'warning is not a ContextMaskWarning'
+        assert isinstance(warning, runner.ContextMaskWarning), (
+            'warning is not a ContextMaskWarning'
+        )
         info = warning.args[0]
-        assert info.startswith('behave runner'), "%r doesn't start with 'behave runner'" % info
+        assert info.startswith('behave runner'), (
+            "%r doesn't start with 'behave runner'" % info
+        )
         assert "'thing'" in info, '%r not in %r' % ("'thing'", info)
         file = __file__.rsplit('.', 1)[0]
         assert file in info, '%r not in %r' % (file, info)
@@ -170,7 +185,9 @@ class TestContext(object):
         warning = warns[0]
         assert isinstance(warning, runner.ContextMaskWarning)
         info = warning.args[0]
-        assert info.startswith('behave runner'), "%r doesn't start with 'behave runner'" % info
+        assert info.startswith('behave runner'), (
+            "%r doesn't start with 'behave runner'" % info
+        )
         assert "'thing'" in info, '%r not in %r' % ("'thing'", info)
         file = __file__.rsplit('.', 1)[0]
         assert file in info, '%r not in %r' % (file, info)
@@ -191,8 +208,9 @@ class TestContext(object):
         eq_('thing' in self.context, True)
         del self.context.thing
 
+
 class ExampleSteps(object):
-    text  = None
+    text = None
     table = None
 
     @staticmethod
@@ -224,6 +242,7 @@ class ExampleSteps(object):
         for keyword, string, func in STEP_DEFINITIONS:
             step_registry.add_definition(keyword, string, func)
 
+
 class TestContext_ExecuteSteps(unittest.TestCase):
     """
     Test the behave.runner.Context.execute_steps() functionality.
@@ -234,9 +253,9 @@ class TestContext_ExecuteSteps(unittest.TestCase):
         runner_ = Mock()
         self.config = runner_.config = Mock()
         runner_.config.verbose = False
-        runner_.config.stdout_capture  = False
-        runner_.config.stderr_capture  = False
-        runner_.config.log_capture  = False
+        runner_.config.stdout_capture = False
+        runner_.config.stderr_capture = False
+        runner_.config.log_capture = False
         self.context = runner.Context(runner_)
         runner_.context = self.context
         self.context.feature = Mock()
@@ -245,7 +264,7 @@ class TestContext_ExecuteSteps(unittest.TestCase):
             # -- SETUP ONCE:
             self.step_registry = step_registry.StepRegistry()
             ExampleSteps.register_steps_with(self.step_registry)
-        ExampleSteps.text  = None
+        ExampleSteps.text = None
         ExampleSteps.table = None
 
     def test_execute_steps_with_simple_steps(self):
@@ -296,8 +315,8 @@ Then a step passes
         with patch('behave.step_registry.registry', self.step_registry):
             result = self.context.execute_steps(doc)
             expected_table = model.Table([u"Name", u"Age"], 0, [
-                    [u"Alice", u"12"],
-                    [u"Bob",   u"23"],
+                [u"Alice", u"12"],
+                [u"Bob",   u"23"],
             ])
             eq_(result, True)
             eq_(expected_table, ExampleSteps.table)
@@ -500,11 +519,13 @@ class TestRunWithPaths(object):
         self.runner.context = Mock()
         self.runner.run_with_paths()
 
-        eq_(self.run_hook.call_args_list, [
-            (('before_all', self.runner.context), {}),
-            ((), {}),
-            (('after_all', self.runner.context), {}),
-        ])
+        eq_(
+            self.run_hook.call_args_list, [
+                (('before_all', self.runner.context), {}),
+                ((), {}),
+                (('after_all', self.runner.context), {}),
+            ]
+        )
 
     @patch('behave.parser.parse_file')
     @patch('os.path.abspath')
@@ -536,7 +557,7 @@ class TestRunWithPaths(object):
 class FsMock(object):
     def __init__(self, *paths):
         self.base = os.path.abspath('.')
-        self.sep  = os.path.sep
+        self.sep = os.path.sep
 
         # This bit of gymnastics is to support Windows. We feed in a bunch of
         # paths in places using FsMock that assume that POSIX-style paths
@@ -759,7 +780,7 @@ class TestFeatureDirectoryLayout2(object):
 
     def test_supplied_root_directory(self):
         config = Mock()
-        config.paths = [ 'features' ]
+        config.paths = ['features']
         config.verbose = True
         r = runner.Runner(config)
 
@@ -780,7 +801,7 @@ class TestFeatureDirectoryLayout2(object):
 
     def test_supplied_root_directory_no_steps(self):
         config = Mock()
-        config.paths = [ 'features' ]
+        config.paths = ['features']
         config.verbose = True
         r = runner.Runner(config)
 
@@ -798,10 +819,9 @@ class TestFeatureDirectoryLayout2(object):
         ok_(('isdir',  os.path.join(fs.base, 'features', 'steps')) in fs.calls)
         eq_(r.base_dir, None)
 
-
     def test_supplied_feature_file(self):
         config = Mock()
-        config.paths = [ 'features/group1/foo.feature' ]
+        config.paths = ['features/group1/foo.feature']
         config.verbose = True
         r = runner.Runner(config)
         r.context = Mock()
@@ -818,13 +838,20 @@ class TestFeatureDirectoryLayout2(object):
                 with r.path_manager:
                     r.setup_paths()
 
-        ok_(('isdir',  os.path.join(fs.base, 'features', 'steps'))  in fs.calls)
-        ok_(('isfile', os.path.join(fs.base, 'features', 'group1', 'foo.feature')) in fs.calls)
+        features_path = os.path.join(fs.base, 'features')
+        ok_(
+            ('isdir',  os.path.join(features_path, 'steps'))
+            in fs.calls
+        )
+        ok_(
+            ('isfile', os.path.join(features_path, 'group1', 'foo.feature'))
+            in fs.calls
+        )
         eq_(r.base_dir, fs.join(fs.base, "features"))
 
     def test_supplied_feature_file_no_steps(self):
         config = Mock()
-        config.paths = [ 'features/group1/foo.feature' ]
+        config.paths = ['features/group1/foo.feature']
         config.verbose = True
         r = runner.Runner(config)
 
@@ -841,7 +868,7 @@ class TestFeatureDirectoryLayout2(object):
 
     def test_supplied_feature_directory(self):
         config = Mock()
-        config.paths = [ 'features/group1' ]
+        config.paths = ['features/group1']
         config.verbose = True
         r = runner.Runner(config)
 
@@ -860,10 +887,9 @@ class TestFeatureDirectoryLayout2(object):
         ok_(('isdir',  os.path.join(fs.base, 'features', 'steps')) in fs.calls)
         eq_(r.base_dir, os.path.join(fs.base, 'features'))
 
-
     def test_supplied_feature_directory_no_steps(self):
         config = Mock()
-        config.paths = [ 'features/group1' ]
+        config.paths = ['features/group1']
         config.verbose = True
         r = runner.Runner(config)
 

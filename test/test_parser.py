@@ -4,10 +4,14 @@ from nose.tools import *
 
 from behave import i18n, model, parser
 
+
 class Common(object):
     def compare_steps(self, steps, expected):
-        have = [(s.step_type, s.keyword, s.name, s.text, s.table) for s in steps]
+        have = [
+            (s.step_type, s.keyword, s.name, s.text, s.table) for s in steps
+        ]
         eq_(have, expected)
+
 
 class TestParser(Common):
     def test_parses_feature_name(self):
@@ -56,8 +60,15 @@ Feature: Stuff
         eq_(feature.name, "Stuff")
         eq_(feature.description,
             ["In order to thing", "As an entity", "I want to do stuff"])
-        eq_(feature.tags, [model.Tag(name, 1)
-            for name in (u'foo', u'bar', u'baz', u'qux', u'winkle_pickers', u'number8')])
+        eq_(
+            feature.tags, [
+                model.Tag(name, 1)
+                for name in (
+                    u'foo', u'bar', u'baz',
+                    u'qux', u'winkle_pickers', u'number8'
+                )
+            ]
+        )
 
     def test_parses_feature_with_a_tag_and_comment(self):
         doc = u"""
@@ -85,8 +96,12 @@ Feature: Stuff
         eq_(feature.name, "Stuff")
         eq_(feature.description,
             ["In order to thing", "As an entity", "I want to do stuff"])
-        eq_(feature.tags, [model.Tag(name, 1)
-                           for name in (u'foo', u'bar', u'baz', u'qux', u'winkle_pickers')])
+        eq_(
+            feature.tags, [
+                model.Tag(name, 1)
+                for name in (u'foo', u'bar', u'baz', u'qux', u'winkle_pickers')
+            ]
+        )
         # -- NOT A TAG: u'number8'
 
     def test_parses_feature_with_background(self):
@@ -292,7 +307,12 @@ Feature: Stuff
         ])
 
         eq_(feature.scenarios[2].name, 'Doing different stuff')
-        eq_(feature.scenarios[2].tags, [model.Tag(n, 1) for n in (u'lots', u'of', u'tags')])
+        eq_(
+            feature.scenarios[2].tags, [
+                model.Tag(n, 1)
+                for n in (u'lots', u'of', u'tags')
+            ]
+        )
         self.compare_steps(feature.scenarios[2].steps, [
             ('given', 'Given', 'stuff', None, None),
             ('then', 'Then', 'who gives a stuff', None, None),
@@ -440,7 +460,8 @@ Feature: Stuff
         assert(len(feature.scenarios) == 1)
         eq_(feature.scenarios[0].name, 'Doing stuff')
         self.compare_steps(feature.scenarios[0].steps, [
-            ('given', 'Given', 'there is stuff', "So\n\nMuch\n\n\nStuff", None),
+            ('given', 'Given', 'there is stuff',
+             "So\n\nMuch\n\n\nStuff", None),
             ('then', 'Then', 'stuff happens', None, None),
         ])
 
@@ -472,7 +493,8 @@ Feature: Multiline
         self.compare_steps(feature.scenarios[0].steps, [
             ('given', 'Given', 'a multiline argument with', text1, None),
             ('given', 'And',   'a multiline argument with', text2, None),
-            ('then', 'Then', 'empty middle lines are not stripped', None, None),
+            ('then', 'Then', 'empty middle lines are not stripped',
+             None, None),
         ])
 
     def test_parses_feature_with_a_step_with_a_string_with_comments(self):
@@ -568,7 +590,8 @@ Feature: Stuff
             ('then', 'Then', 'we have <Things>', None, None),
         ])
 
-    def test_parses_feature_with_a_scenario_outline_with_multiple_examples(self):
+    def test_parses_feature_with_a_scenario_outline_with_multiple_examples(
+            self):
         doc = u'''
 Feature: Stuff
 
@@ -642,7 +665,11 @@ Feature: Stuff
 
         assert(len(feature.scenarios) == 1)
         eq_(feature.scenarios[0].name, 'Doing all sorts of stuff')
-        eq_(feature.scenarios[0].tags, [model.Tag(u'stuff', 1), model.Tag(u'derp', 1)])
+        eq_(
+            feature.scenarios[0].tags, [
+                model.Tag(u'stuff', 1), model.Tag(u'derp', 1)
+            ]
+        )
         self.compare_steps(feature.scenarios[0].steps, [
             ('given', 'Given', 'we have <Stuff>', None, None),
             ('when', 'When', 'we do stuff', None, None),
@@ -743,8 +770,8 @@ Feature: Stuff
         eq_(feature.scenarios[0].tags, [model.Tag(u'fred', 1)])
         string = '\n'.join([
             'Yarr, my hovercraft be full of stuff.',
-            "Also, I be feelin' this pirate schtick be a mite overdone, " + \
-                "me hearties.",
+            "Also, I be feelin' this pirate schtick be a mite overdone, "
+            "me hearties.",
             '    Also: rum.'
         ])
         self.compare_steps(feature.scenarios[0].steps, [
@@ -800,7 +827,11 @@ Feature: Stuff
             ]
         )
         eq_(feature.scenarios[3].name, 'Doing all sorts of stuff')
-        eq_(feature.scenarios[3].tags, [model.Tag(u'stuff', 1), model.Tag(u'derp', 1)])
+        eq_(
+            feature.scenarios[3].tags, [
+                model.Tag(u'stuff', 1), model.Tag(u'derp', 1)
+            ]
+        )
         eq_(feature.scenarios[3].examples[0].name, 'Some stuff')
         eq_(feature.scenarios[3].examples[0].table, table)
         table = model.Table(
@@ -816,7 +847,6 @@ Feature: Stuff
             ('when', 'When', 'we do stuff with a table', None, table),
             ('then', 'Then', 'we have <Things>', None, None),
         ])
-
 
     def test_fails_to_parse_when_and_is_out_of_order(self):
         doc = u"""
@@ -847,6 +877,7 @@ Feature: Stuff
       | Fail | Wheel|
 """.lstrip()
         assert_raises(parser.ParserError, parser.parse_feature, doc)
+
 
 class TestForeign(Common):
     def test_first_line_comment_sets_language(self):
@@ -1026,6 +1057,7 @@ def parse_tags(line):
     the_parser = parser.Parser()
     return the_parser.parse_tags(line.strip())
 
+
 class TestParser4Tags(Common):
 
     def test_parse_tags_with_one_tag(self):
@@ -1037,7 +1069,7 @@ class TestParser4Tags(Common):
         tags = parse_tags('@one  @two.three-four  @xxx')
         eq_(len(tags), 3)
         eq_(tags, [model.Tag(name, 1)
-            for name in (u'one', u'two.three-four', u'xxx' )])
+            for name in (u'one', u'two.three-four', u'xxx')])
 
     def test_parse_tags_with_tag_and_comment(self):
         tags = parse_tags('@one  # @fake-tag-in-comment xxx')
@@ -1045,10 +1077,12 @@ class TestParser4Tags(Common):
         eq_(tags[0], "one")
 
     def test_parse_tags_with_tags_and_comment(self):
-        tags = parse_tags('@one  @two.three-four  @xxx # @fake-tag-in-comment xxx')
+        tags = parse_tags(
+            '@one  @two.three-four  @xxx # @fake-tag-in-comment xxx'
+        )
         eq_(len(tags), 3)
         eq_(tags, [model.Tag(name, 1)
-                   for name in (u'one', u'two.three-four', u'xxx' )])
+                   for name in (u'one', u'two.three-four', u'xxx')])
 
     @raises(parser.ParserError)
     def test_parse_tags_with_invalid_tags(self):
@@ -1076,7 +1110,7 @@ Then every step will be parsed without errors
             ("when",  "When",  "I have another simple step", None, None),
             ("when",  "And",   "I have another simple step", None, None),
             ("then",  "Then",  "every step will be parsed without errors",
-                                None, None),
+             None, None),
         ])
 
     def test_parse_steps_with_multiline_text(self):
@@ -1101,7 +1135,8 @@ Then every step will be parsed without errors
         text2 = "Ipsum lorem\nLorem ipsum"
         self.compare_steps(steps, [
             ("given", "Given", "a step with multi-line text", text1, None),
-            ("when",  "When",  "I have a step with multi-line text", text2, None),
+            ("when",  "When",  "I have a step with multi-line text", text2,
+             None),
             ("then",  "Then",  "every step will be parsed without errors",
              None, None),
         ])
@@ -1122,7 +1157,8 @@ Then the last step has multi-line text:
         text2 = "Lorem ipsum\nIpsum lorem"
         self.compare_steps(steps, [
             ("given", "Given", "a simple step", None, None),
-            ("then",  "Then",  "the last step has multi-line text", text2, None),
+            ("then",  "Then",  "the last step has multi-line text", text2,
+             None),
         ])
 
     def test_parse_steps_with_table(self):
@@ -1143,22 +1179,28 @@ Then every step will be parsed without errors
         eq_(len(steps), 3)
         # -- EXPECTED STEP DATA:
         #     SCHEMA: step_type, keyword, name, text, table
-        table1 = model.Table([u"Name", u"Age"], 0, [
-            [ u"Alice", u"12" ],
-            [ u"Bob",   u"23" ],
-            ])
-        table2 = model.Table([u"Country", u"Capital"], 0, [
-            [ u"France",   u"Paris" ],
-            [ u"Germany",  u"Berlin" ],
-            [ u"Spain",    u"Madrid" ],
-            [ u"USA",      u"Washington" ],
-            ])
-        self.compare_steps(steps, [
-            ("given", "Given", "a step with a table", None, table1),
-            ("when",  "When",  "I have a step with a table", None, table2),
-            ("then",  "Then",  "every step will be parsed without errors",
-             None, None),
-        ])
+        table1 = model.Table(
+            [u"Name", u"Age"], 0, [
+                [u"Alice", u"12"],
+                [u"Bob",   u"23"],
+            ]
+        )
+        table2 = model.Table(
+            [u"Country", u"Capital"], 0, [
+                [u"France",   u"Paris"],
+                [u"Germany",  u"Berlin"],
+                [u"Spain",    u"Madrid"],
+                [u"USA",      u"Washington"],
+            ]
+        )
+        self.compare_steps(
+            steps, [
+                ("given", "Given", "a step with a table", None, table1),
+                ("when",  "When",  "I have a step with a table", None, table2),
+                ("then",  "Then",  "every step will be parsed without errors",
+                 None, None),
+            ]
+        )
 
     def test_parse_steps_when_last_step_has_a_table(self):
         doc = u'''
@@ -1172,13 +1214,16 @@ Then the last step has a final table:
         eq_(len(steps), 2)
         # -- EXPECTED STEP DATA:
         #     SCHEMA: step_type, keyword, name, text, table
-        table2 = model.Table([u"Name", u"City"], 0, [
-            [ u"Alonso", u"Barcelona" ],
-            [ u"Bred",   u"London" ],
-            ])
+        table2 = model.Table(
+            [u"Name", u"City"], 0, [
+                [u"Alonso", u"Barcelona"],
+                [u"Bred",   u"London"],
+            ]
+        )
         self.compare_steps(steps, [
             ("given", "Given", "a simple step", None, None),
-            ("then",  "Then",  "the last step has a final table", None, table2),
+            ("then",  "Then",  "the last step has a final table", None,
+             table2),
         ])
 
     @raises(parser.ParserError)

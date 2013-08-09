@@ -33,15 +33,16 @@ options = [
     (('--processes',),
      dict(metavar="NUMBER", dest='proc_count',
           help="""Use multiple pids to do the work faster.
-		Not all options work properly under parallel mode. See README.md 
-		""")),
+    Not all options work properly under parallel mode. See README.md
+    """)),
 
     (('--parallel-element',),
      dict(metavar="STRING", dest='parallel_element',
-          help="""If you used the --processes option, then this will control how the tests get parallelized.
-		Valid values are 'feature' or 'scenario'. Anything else will error. See readme for more
-		info on how this works.
-		""")),
+          help="""If you used the --processes option, then this will
+          control how the tests get parallelized.  Valid values are
+          'feature' or 'scenario'.  Anything else will error.  See
+          readme for more info on how this works.
+    """)),
 
     (('-e', '--exclude'),
      dict(metavar="PATTERN", dest='exclude_re',
@@ -364,7 +365,8 @@ class Configuration(object):
         summary=True,
         junit=False,
         # -- SPECIAL:
-        format0="pretty",   #< Used when no formatters are configured.
+        # Used when no formatters are configured.
+        format0="pretty",
     )
 
     def __init__(self):

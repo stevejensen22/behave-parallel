@@ -437,7 +437,8 @@ class Scenario(TagStatement, Replayable):
                     runner.context._set_root_attribute('failed', True)
             else:
                 step.status = 'skipped'
-                # XXX-JE-PROBLEMATIC: self.status is a property, cannot assign to it.
+                # XXX-JE-PROBLEMATIC: self.status is a property, cannot assign
+                # to it.
                 # XXX-JE-DISABLE:
                 # if self.status is None:
                 #    self.status = 'skipped'
@@ -752,7 +753,7 @@ class Step(BasicStatement, Replayable):
             # -- ENSURE:
             #  * runner.context.text/.table attributes are reset (#66).
             #  * Even EMPTY multiline text is available in context.
-            runner.context.text  = self.text
+            runner.context.text = self.text
             runner.context.table = self.table
             match.run(runner.context)
             self.status = 'passed'
@@ -957,6 +958,7 @@ class Row(object):
         from behave.compat.collections import OrderedDict
         return OrderedDict(self.items())
 
+
 class Tag(unicode):
     '''Tags appear may be associated with Features or Scenarios.
 
@@ -1078,6 +1080,7 @@ class Match(Replayable):
         filename = relpath(step_function.func_code.co_filename, os.getcwd())
         location = '%s:%d' % (filename, step_function.func_code.co_firstlineno)
         return location
+
 
 class NoMatch(Match):
     def __init__(self):

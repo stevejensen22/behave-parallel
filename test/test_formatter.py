@@ -99,6 +99,7 @@ class FormatterTests(object):
         self.config.format = [self.formatter_name]
 
     _line = 0
+
     @property
     def line(self):
         self._line += 1
@@ -109,19 +110,25 @@ class FormatterTests(object):
         f.uri('<string>')
         return f
 
-    def _feature(self, keyword=u'k\xe9yword', name=u'name', tags=[u'spam', u'ham'],
-            location=u'location', description=[u'description'], scenarios=[],
-            background=None):
+    def _feature(self, keyword=u'k\xe9yword', name=u'name',
+                 tags=[u'spam', u'ham'], location=u'location',
+                 description=[u'description'], scenarios=[],
+                 background=None):
         line = self.line
         tags = [Tag(name, line) for name in tags]
-        return Feature('<string>', line, keyword, name, tags=tags,
+        return Feature(
+            '<string>', line, keyword, name, tags=tags,
             description=description, scenarios=scenarios,
-            background=background)
+            background=background
+        )
 
-    def _scenario(self, keyword=u'k\xe9yword', name=u'name', tags=[], steps=[]):
+    def _scenario(self, keyword=u'k\xe9yword', name=u'name', tags=[],
+                  steps=[]):
         line = self.line
         tags = [Tag(name, line) for name in tags]
-        return Scenario('<string>', line, keyword, name, tags=tags, steps=steps)
+        return Scenario(
+            '<string>', line, keyword, name, tags=tags, steps=steps
+        )
 
     def _step(self, keyword=u'k\xe9yword', step_type='given', name=u'name',
               text=None, table=None):
@@ -137,8 +144,8 @@ class FormatterTests(object):
 
     def test_feature(self):
         # this test does not actually check the result of the formatting; it
-        # just exists to make sure that formatting doesn't explode in the face of
-        # unicode and stuff
+        # just exists to make sure that formatting doesn't explode in the face
+        # of unicode and stuff
         p = self._formatter(_tf(), self.config)
         f = self._feature()
         p.feature(f)
@@ -179,7 +186,8 @@ class TestTagCount(FormatterTests):
     formatter_name = 'plain'
 
     def _formatter(self, stream, config, tag_counts=None):
-        if tag_counts is None: tag_counts = {}
+        if tag_counts is None:
+            tag_counts = {}
         f = formatters.get_formatter(config, stream)
         f.uri('<string>')
         f = tag_count.TagCountFormatter(f, tag_counts)
