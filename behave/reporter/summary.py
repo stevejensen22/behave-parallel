@@ -39,7 +39,6 @@ class SummaryReporter(Reporter):
         self.duration = 0.0
         self.failed_scenarios = []
 
-
     def feature(self, feature):
         self.feature_summary[feature.status or 'skipped'] += 1
         self.duration += feature.duration

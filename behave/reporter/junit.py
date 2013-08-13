@@ -80,13 +80,15 @@ class JUnitReporter(Reporter):
 
     # -- REPORTER-API:
     def feature(self, feature):
-        filename  = self.make_feature_filename(feature)
+        filename = self.make_feature_filename(feature)
         classname = filename
-        report    = FeatureReportData(feature, filename)
-        filename  = 'TESTS-%s.xml' % filename
+        report = FeatureReportData(feature, filename)
+        filename = 'TESTS-%s.xml' % filename
 
         suite = ElementTree.Element('testsuite')
-        suite.set('name', '%s.%s' % (classname, feature.name or feature.filename))
+        suite.set('name', '%s.%s' % (
+            classname, feature.name or feature.filename
+        ))
 
         # -- BUILD-TESTCASES: From scenarios
         for scenario in feature:
@@ -124,7 +126,8 @@ class JUnitReporter(Reporter):
         EXAMPLE: Search for a failing step in a scenario (all steps).
             >>> scenario = ...
             >>> failed_step = select_step_with_status("failed", scenario)
-            >>> failed_step = select_step_with_status("failed", scenario.all_steps)
+            >>> failed_step = select_step_with_status("failed", \
+                    scenario.all_steps)
             >>> assert failed_step.status == "failed"
 
         EXAMPLE: Search only scenario steps, skip background steps.
@@ -181,12 +184,14 @@ class JUnitReporter(Reporter):
         """
         assert isinstance(scenario, Scenario)
         assert not isinstance(scenario, ScenarioOutline)
-        feature   = report.feature
+        feature = report.feature
         classname = report.classname
         report.counts_tests += 1
 
         case = ElementTree.Element('testcase')
-        case.set('classname', '%s.%s' % (classname, feature.name or feature.filename))
+        case.set('classname', '%s.%s' % (
+            classname, feature.name or feature.filename
+        ))
         case.set('name', scenario.name or '')
         case.set('status', scenario.status)
         # -- ORIG: case.set('time', str(round(scenario.duration, 3)))
@@ -206,7 +211,9 @@ class JUnitReporter(Reporter):
                 element_name = 'error'
             # -- COMMON-PART:
             failure = ElementTree.Element(element_name)
-            text = u"Step: {0}.\nLocation: {1}\n".format(step.name, step.location)
+            text = u"Step: {0}.\nLocation: {1}\n".format(
+                step.name, step.location
+            )
             message = str(step.exception)
             if len(message) > 80:
                 message = message[:80] + "..."
@@ -231,7 +238,7 @@ class JUnitReporter(Reporter):
 
         # Create stdout section for each test case
         stdout = ElementTree.Element('system-out')
-        text  = self.describe_scenario(scenario)
+        text = self.describe_scenario(scenario)
 
         # Append the captured standard output
         if scenario.stdout:

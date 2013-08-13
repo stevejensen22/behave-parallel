@@ -56,13 +56,15 @@ class Formatter(object):
         Called after :method:`feature()` is called.
         Called before processing any scenarios or scenario outlines.
 
-        :param background:  Background object (as :class:`behave.model.Background`)
+        :param background:  Background object (as
+                            :class:`behave.model.Background`)
         """
         pass
 
     def scenario(self, scenario):
         """
-        Called before a scenario is executed (or an example of ScenarioOutline).
+        Called before a scenario is executed (or an example of
+        ScenarioOutline).
 
         :param scenario:  Scenario object (as :class:`behave.model.Scenario`)
         """
@@ -105,6 +107,7 @@ class Formatter(object):
 
     def close(self):
         """
-        Called before the formatter is no longer used (stream/io compatibility).
+        Called before the formatter is no longer used (stream/io
+        compatibility).
         """
         pass

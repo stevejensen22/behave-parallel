@@ -7,6 +7,7 @@ import codecs
 # -----------------------------------------------------------------------------
 formatters = {}
 
+
 def register(formatter):
     formatters[formatter.name] = formatter
 

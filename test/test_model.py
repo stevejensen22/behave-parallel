@@ -8,6 +8,7 @@ from nose.tools import *
 from behave import model
 from behave.compat.collections import OrderedDict
 
+
 class TestFeatureRun(object):
     def setUp(self):
         self.runner = Mock()
@@ -33,7 +34,8 @@ class TestFeatureRun(object):
 
         self.formatter.background.assert_called_with(feature.background)
 
-    def test_formatter_background_not_called_when_feature_has_no_background(self):
+    def test_formatter_background_not_called_when_feature_has_no_background(
+            self):
         feature = model.Feature('foo.feature', 1, u'Feature', u'foo')
 
         feature.run(self.runner)
@@ -156,7 +158,8 @@ class TestScenarioRun(object):
         eq_(scenario.status, 'failed')
         self.context._set_root_attribute.assert_called_with('failed', True)
 
-    def test_skipped_steps_set_step_status_and_scenario_status_if_not_set(self):
+    def test_skipped_steps_set_step_status_and_scenario_status_if_not_set(
+            self):
         self.config.stdout_capture = False
         self.config.log_capture = False
         self.config.tags.check.return_value = False
@@ -225,12 +228,14 @@ class TestScenarioOutline(object):
 
         outline.run(runner)
 
-        eq_(context._set_root_attribute.call_args_list, [
-            (('active_outline', outline._scenarios[0]._row), {}),
-            (('active_outline', outline._scenarios[1]._row), {}),
-            (('active_outline', outline._scenarios[2]._row), {}),
-            (('active_outline', None), {}),
-        ])
+        eq_(
+            context._set_root_attribute.call_args_list, [
+                (('active_outline', outline._scenarios[0]._row), {}),
+                (('active_outline', outline._scenarios[1]._row), {}),
+                (('active_outline', outline._scenarios[2]._row), {}),
+                (('active_outline', None), {}),
+            ]
+        )
 
 
 def raiser(exception):
@@ -302,8 +307,9 @@ class TestStepRun(object):
         match = Mock()
         self.step_registry.find_match.return_value = match
 
-        side_effects = (None, raiser(AssertionError('whee')),
-                raiser(Exception('whee')))
+        side_effects = (
+            None, raiser(AssertionError('whee')), raiser(Exception('whee'))
+        )
         for side_effect in side_effects:
             match.run.side_effect = side_effect
             step.run(self.runner, quiet=True)
@@ -336,11 +342,13 @@ class TestStepRun(object):
             with patch('behave.step_registry.registry', self.step_registry):
                 step.run(self.runner)
 
-            eq_(match.run.call_args_list, [
-                (('before_step', self.context, step), {}),
-                ((self.context,), {}),
-                (('after_step', self.context, step), {}),
-            ])
+            eq_(
+                match.run.call_args_list, [
+                    (('before_step', self.context, step), {}),
+                    ((self.context,), {}),
+                    (('after_step', self.context, step), {}),
+                ]
+            )
 
     def test_run_sets_table_if_present(self):
         step = model.Step('foo.feature', 17, u'Given', 'given', u'foo',
@@ -413,8 +421,9 @@ class TestStepRun(object):
             time_time.side_effect = time_time_2
             return 17
 
-        side_effects = (None, raiser(AssertionError('whee')),
-                raiser(Exception('whee')))
+        side_effects = (
+            None, raiser(AssertionError('whee')), raiser(Exception('whee'))
+        )
         for side_effect in side_effects:
             match.run.side_effect = side_effect
             time_time.side_effect = time_time_1
@@ -468,6 +477,7 @@ class TestTableModel(object):
         [u'lint', u'low', u'high'],
         [u'green', u'variable', u'awkward'],
     ]
+
     def setUp(self):
         self.table = model.Table(self.HEAD, 0, self.DATA)
 
@@ -501,6 +511,7 @@ class TestTableModel(object):
 
     def test_table_row_items(self):
         eq_(self.table[0].items(), zip(self.HEAD, self.DATA[0]))
+
 
 class TestModelRow(object):
     HEAD = [u'name',  u'sex',    u'age']

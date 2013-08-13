@@ -8,6 +8,7 @@ Test progress formatters:
 from __future__ import absolute_import
 from .test_formatter import FormatterTests as FormatterTest
 
+
 class TestScenarioProgressFormatter(FormatterTest):
     formatter_name = "progress"
 

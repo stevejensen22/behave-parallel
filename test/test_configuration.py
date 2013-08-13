@@ -5,7 +5,7 @@ from nose.tools import *
 from behave import configuration
 
 # one entry of each kind handled
-TEST_CONFIG='''[behave]
+TEST_CONFIG = '''[behave]
 outfile=/tmp/spam
 tags = @foo,~@bar
        @zap
@@ -14,6 +14,7 @@ format=pretty
 stdout_capture=no
 bogus=spam
 '''
+
 
 class TestConfiguration(object):
 

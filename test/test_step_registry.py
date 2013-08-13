@@ -4,6 +4,7 @@ from mock import Mock, patch
 from nose.tools import *
 from behave import step_registry
 
+
 class TestStepRegistry(object):
     def test_add_definition_adds_to_lowercased_keyword(self):
         registry = step_registry.StepRegistry()
@@ -77,7 +78,8 @@ class TestStepRegistry(object):
             eq_(mock.match.call_count, 0)
 
     @patch.object(step_registry.registry, 'add_definition')
-    def test_make_step_decorator_ends_up_adding_a_step_definition(self, add_definition):
+    def test_make_step_decorator_ends_up_adding_a_step_def(
+            self, add_definition):
         step_type = object()
         string = object()
         func = object()

@@ -6,11 +6,13 @@ import parse
 
 from behave import matchers, model, runner
 
+
 class DummyMatcher(matchers.Matcher):
     desired_result = None
 
     def check_match(self, step):
         return DummyMatcher.desired_result
+
 
 class TestMatcher(object):
     def setUp(self):
@@ -31,6 +33,7 @@ class TestMatcher(object):
         assert isinstance(match, model.Match)
         assert match.func is func
         assert match.arguments == arguments
+
 
 class TestParseMatcher(object):
     def setUp(self):
@@ -71,7 +74,8 @@ class TestParseMatcher(object):
             m = matcher.match('some numbers 1, 2 and 3 and the bar is -45.3')
             assert m.func is func
             args = m.arguments
-            have = [(a.start, a.end, a.original, a.value, a.name) for a in args]
+            have = [(a.start, a.end, a.original, a.value, a.name)
+                    for a in args]
             eq_(have, expected)
 
     def test_named_arguments(self):
@@ -81,11 +85,13 @@ class TestParseMatcher(object):
 
         m = matcher.match("has a foo, an 11 and a 3.14159")
         m.run(context)
-        eq_(self.recorded_args, ((context,), {
-            'string': 'foo',
-            'integer': 11,
-            'decimal': 3.14159
-        }))
+        eq_(
+            self.recorded_args, ((context,), {
+                'string': 'foo',
+                'integer': 11,
+                'decimal': 3.14159
+            })
+        )
 
     def test_positional_arguments(self):
         text = "has a {}, an {:d} and a {:f}"
@@ -95,6 +101,7 @@ class TestParseMatcher(object):
         m = matcher.match("has a foo, an 11 and a 3.14159")
         m.run(context)
         eq_(self.recorded_args, ((context, 'foo', 11, 3.14159), {}))
+
 
 class TestRegexMatcher(object):
     def test_returns_none_if_regex_does_not_match(self):
@@ -139,6 +146,7 @@ class TestRegexMatcher(object):
         args = m.arguments
         have = [(a.start, a.end, a.original, a.value, a.name) for a in args]
         eq_(have, expected)
+
 
 def test_step_matcher_current_matcher():
     current_matcher = matchers.current_matcher

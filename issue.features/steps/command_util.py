@@ -8,15 +8,21 @@ TODO:
 
 import os.path
 
+
 # -----------------------------------------------------------------------------
 # CONSTANTS:
 # -----------------------------------------------------------------------------
-HERE    = os.path.dirname(__file__)
+
+
+HERE = os.path.dirname(__file__)
 WORKDIR = os.path.join(HERE, "..", "..", "__WORKDIR__")
+
 
 # -----------------------------------------------------------------------------
 # UTILITY FUNCTIONS:
 # -----------------------------------------------------------------------------
+
+
 def ensure_directory_exists(dirname):
     """
     Ensures that a directory exits.
@@ -27,13 +33,15 @@ def ensure_directory_exists(dirname):
     assert os.path.exists(dirname)
     assert os.path.isdir(dirname)
 
+
 def ensure_context_resource_exists(context, name, default_value=None):
     """
-    Ensure a behave resource exists as attribute in the behave context.
-    If this is not the case, the attribute is created by using the default_value.
+    Ensure a behave resource exists as attribute in the behave context.  If
+    this is not the case, the attribute is created by using the default_value.
     """
     if not hasattr(context, name):
         setattr(context, name, default_value)
+
 
 def ensure_workdir_exists(context):
     """
@@ -63,14 +71,16 @@ def create_textfile_with_contents(filename, contents):
     outstream.close()
     assert os.path.exists(filename)
 
+
 def text_remove_empty_lines(text):
     """
     Whitespace normalization:
       - Strip empty lines
       - Strip trailing whitespace
     """
-    lines = [ line.rstrip()  for line in text.splitlines()  if line.strip() ]
+    lines = [line.rstrip() for line in text.splitlines() if line.strip()]
     return "\n".join(lines)
+
 
 def text_normalize(text):
     """
@@ -80,8 +90,9 @@ def text_normalize(text):
       - Strip trailing whitespace in a line
       - Normalize line endings
     """
-    lines = [ line.strip()  for line in text.splitlines()  if line.strip() ]
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
     return "\n".join(lines)
+
 
 def posixpath_normpath(pathname):
     """

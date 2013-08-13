@@ -2,6 +2,7 @@ from nose import tools
 
 from behave.tag_expression import TagExpression
 
+
 class TestTagExpressionNoTags(object):
     def setUp(self):
         self.e = TagExpression([])
@@ -11,6 +12,7 @@ class TestTagExpressionNoTags(object):
 
     def test_should_match_empty_tags(self):
         assert self.e.check([])
+
 
 class TestTagExpressionFoo(object):
     def setUp(self):
@@ -25,6 +27,7 @@ class TestTagExpressionFoo(object):
     def test_should_not_match_no_tags(self):
         assert not self.e.check([])
 
+
 class TestTagExpressionNotFoo(object):
     def setUp(self):
         self.e = TagExpression(['-foo'])
@@ -34,6 +37,7 @@ class TestTagExpressionNotFoo(object):
 
     def test_should_not_match_foo(self):
         assert not self.e.check(['foo'])
+
 
 class TestTagExpressionFooOrBar(object):
     def setUp(self):
@@ -48,6 +52,7 @@ class TestTagExpressionFooOrBar(object):
     def test_should_not_match_zap(self):
         assert not self.e.check(['zap'])
 
+
 class TestTagExpressionFooOrBarAndNotZap(object):
     def setUp(self):
         self.e = TagExpression(['foo,bar', '-zap'])
@@ -57,6 +62,7 @@ class TestTagExpressionFooOrBarAndNotZap(object):
 
     def test_should_not_match_foo_zap(self):
         assert not self.e.check(['foo', 'zap'])
+
 
 class TestTagExpressionFoo3OrNotBar4AndZap5(object):
     def setUp(self):
@@ -68,12 +74,14 @@ class TestTagExpressionFoo3OrNotBar4AndZap5(object):
     def test_should_match_foo_zap(self):
         assert self.e.check(['foo', 'zap'])
 
+
 class TestTagExpressionParsing(object):
     def setUp(self):
         self.e = TagExpression([' foo:3 , -bar ', ' zap:5 '])
 
     def test_should_have_limits(self):
         tools.eq_(self.e.limits, {'zap': 5, 'foo': 3})
+
 
 class TestTagExpressionTagLimits(object):
     def test_should_be_counted_for_negative_tags(self):
