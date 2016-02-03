@@ -5,6 +5,7 @@ behave-parallel
 Q: Will this be merged upstream?
 
 A: I'd like to, but... https://github.com/behave/behave/pull/196
+Probably watch this issue for updates: https://github.com/behave/behave/issues/235
 
 
 ======
