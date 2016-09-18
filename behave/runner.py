@@ -713,7 +713,13 @@ class Runner(object):
                 formatter.uri(current_job.filename)
 
             start_time = time.strftime("%Y-%m-%d %H:%M:%S")
+            if current_job.type == 'scenario' and getattr(self.config,
+                                                  'parallel_scenario_feature_hooks'):
+                self.run_hook('before_feature', self.context, current_job)
             current_job.run(self)
+            if current_job.type == 'scenario' and getattr(self.config,
+                                                  'parallel_scenario_feature_hooks'):
+                self.run_hook('after_feature', self.context, current_job)
             end_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
             sys.stderr.write(current_job.status[0]+" ")

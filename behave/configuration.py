@@ -81,6 +81,13 @@ options = [
 		info on how this works.
 		""")),
 
+    (('--parallel-scenario-feature-hooks',),
+     dict(action='store_true', dest='parallel_scenario_feature_hooks',
+          help="""By default, if you run parallel scenarios the before/after feature in environment.py won't run for
+               those scenarios. This flag will make them run for each scenario. NOTE: This means before_feature and 
+               after_feature will run repeatedly and concurrently for each scenario. 
+           """)),
+
     (('-e', '--exclude'),
      dict(metavar="PATTERN", dest='exclude_re',
           help="""Don't run feature files matching regular expression
