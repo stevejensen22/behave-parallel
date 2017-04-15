@@ -28,7 +28,7 @@ description = ''.join(open('README.rst').readlines()[5:])
 
 setup(
     name='behave',
-    version='1.2.4a1',
+    version='1.2.5',
     description='behave is behaviour-driven development, Python style',
     long_description=description,
     author='Benno Rice, Richard Jones and Jens Engel',
